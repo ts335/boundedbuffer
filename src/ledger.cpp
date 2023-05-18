@@ -25,7 +25,7 @@ int max_items = 0;
 void InitBank(int num_workers, char *filename) {
 	//TODO: initialize the bank object with 10 accounts
 	bank = new Bank(10);
-	buffer = new Buffer(25);
+	buffer = new Buffer(8);
 
 	bank->print_account();
 	//TODO: call load_ledger() to parse the file given by filename
