@@ -12,16 +12,16 @@ Buffer::Buffer(int N) {
     size = N; //size is N whatever the user declared the program as
     first_empty_slot = 0; //initialized to 0
     last_filled_slot = 0; //initialized to 0
-    pthread_mutex_init(&lock, NULL);
-    pthread_cond_init(&notFull, NULL);
-    pthread_cond_init(&notEmpty, NULL);
+    pthread_mutex_init(&lock, NULL); //initializing lock
+    pthread_cond_init(&notFull, NULL); //initializing condition
+    pthread_cond_init(&notEmpty, NULL); //initializing condition
 }
 
 Buffer::~Buffer() { 
-  free(boundedbuffer); 
+  free(boundedbuffer); //freeing buffer
   pthread_mutex_destroy(&lock); //destroying lock
-  pthread_cond_destroy(&notFull); 
-  pthread_cond_destroy(&notEmpty);
+  pthread_cond_destroy(&notFull); //destroy
+  pthread_cond_destroy(&notEmpty); //destroy
 }
 
 struct Ledger Buffer::pop() { //removes from buffer

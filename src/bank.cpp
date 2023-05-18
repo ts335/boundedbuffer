@@ -5,7 +5,7 @@
  */
 void Bank::print_account() {
   for (int i = 0; i < num; i++) {
-    pthread_rwlock_rdlock(&accounts[i].lock);
+    pthread_rwlock_rdlock(&accounts[i].lock); //reader lock
     cout << "ID# " << accounts[i].accountID << " | " << accounts[i].balance
          << endl;
     pthread_rwlock_unlock(&accounts[i].lock);

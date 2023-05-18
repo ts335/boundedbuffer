@@ -122,7 +122,7 @@ void* worker(void *workerID){
 		} else if (item.mode == 2) {
 			bank->transfer(id, item.ledgerID, item.from, item.to, item.amount);
 		} else if (item.mode == 3) {
-            bank->checkbalance(id, item.ledgerID, item.from); //added
+            bank->checkbalance(id, item.ledgerID, item.from); //added bank option for checkbalance()
         }
 	
 	}

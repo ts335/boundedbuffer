@@ -19,7 +19,7 @@ using namespace std;
 struct Account {
   unsigned int accountID; 
   long balance;
-  pthread_rwlock_t lock; //added
+  pthread_rwlock_t lock; //added changed to reader/writer lock insteaad of mutex
 };
 
 class Bank {
@@ -35,7 +35,7 @@ class Bank {
     int deposit(int workerID, int ledgerID, int accountID, int amount);
     int withdraw(int workerID, int ledgerID, int accountID, int amount);
     int transfer(int workerID, int ledgerID, int src_id, int dest_id, unsigned int amount);
-    int checkbalance(int workerID, int ledgerID, int accountID); 
+    int checkbalance(int workerID, int ledgerID, int accountID); //added func for checkbalance()
     
     void print_account();
     void recordSucc(char* message);
