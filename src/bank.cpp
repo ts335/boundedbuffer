@@ -64,7 +64,7 @@ Bank::Bank(int N) {
     //initializing account id, balance, and lock fields
     accounts[i].accountID = i;
     accounts[i].balance = 0;
-  pthread_rwlock_init(&accounts[i].lock, NULL);
+  pthread_rwlock_init(&accounts[i].lock, NULL); //initializing reader/writer lock
   }
 }
 
@@ -80,7 +80,7 @@ Bank::~Bank() {
   pthread_mutex_lock(&bank_lock);
   for (int i = 0; i < num; i++) {
     //looping through accounts to destroy the locks
-    pthread_rwlock_destroy(&accounts[i].lock); 
+    pthread_rwlock_destroy(&accounts[i].lock); //destroying reader/writer lock
   }
   //deleting accounts array
   delete[] accounts; 
@@ -106,7 +106,7 @@ int Bank::deposit(int workerID, int ledgerID, int accountID, int amount) {
   if (accountID >= num || accountID < 0 ) {
     return -1;
   }
-  pthread_rwlock_wrlock(&accounts[accountID].lock);
+  pthread_rwlock_wrlock(&accounts[accountID].lock); //writer lock
   accounts[accountID].balance += amount;
   sprintf(message, "Worker %d completed ledger %d: deposit %d into account %d", workerID, ledgerID, amount, accountID); 
   recordSucc(message);
@@ -136,7 +136,7 @@ int Bank::withdraw(int workerID, int ledgerID, int accountID, int amount) {
     return -1;
   }
 
-  pthread_rwlock_wrlock(&accounts[accountID].lock);
+  pthread_rwlock_wrlock(&accounts[accountID].lock); //writer lock
   if (accounts[accountID].balance-amount < 0) {
     sprintf(message, "Worker %d failed to complete ledger %d: withdraw %d from account %d", workerID, ledgerID, amount, accountID);
     recordFail(message);
@@ -180,8 +180,8 @@ int Bank::transfer(int workerID, int ledgerID, int srcID, int destID,
   }
   
   if (srcID < destID){
-    pthread_rwlock_wrlock(&accounts[srcID].lock);
-    pthread_rwlock_wrlock(&accounts[destID].lock);
+    pthread_rwlock_wrlock(&accounts[srcID].lock); //writer lock
+    pthread_rwlock_wrlock(&accounts[destID].lock); //writer lock
   } else {
     pthread_rwlock_unlock(&accounts[destID].lock);
     pthread_rwlock_unlock(&accounts[srcID].lock);
@@ -208,13 +208,13 @@ int Bank::transfer(int workerID, int ledgerID, int srcID, int destID,
 
 int Bank::checkbalance(int workerID, int ledgerID, int accountID) { //added
   char message[4096];
-  if (accountID >= num || accountID < 0 ) {
-    return -1;
+  if (accountID >= num || accountID < 0 ) { //checking for valid account id
+    return -1; //return -1 upon failure
   }
-  pthread_rwlock_rdlock(&accounts[accountID].lock); 
-  int balance = accounts[accountID].balance; 
+  pthread_rwlock_rdlock(&accounts[accountID].lock); //using reader lock since we are not altering the amount in the account
+  int balance = accounts[accountID].balance; //saving balance of account
   sprintf(message, "Worker %d completed ledger %d: balance check of account %d. Account balance is %d", workerID, ledgerID, accountID, balance); 
-  recordSucc(message);
-  pthread_rwlock_unlock(&accounts[accountID].lock);
-  return 0; 
+  recordSucc(message); //recording the message of success
+  pthread_rwlock_unlock(&accounts[accountID].lock); //freeing lock
+  return 0; //return 0 upon success
 }

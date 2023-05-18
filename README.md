@@ -22,6 +22,7 @@ This function has not been altered from original starter code.
 - Changed lock to reader/writer lock in bank.h. In bank.cpp The lock in checkbalance() has specifically been changed to a reader lock. While locks in deposit, withdraw, etc. were changed to writer locks since they are altering the amount in the account.
 - Added checkbalance() as a bank operation in the worker function in ledger.cpp (will work depending on the ledger entry mode)
  # buffer.cpp and buffer.h (new class/header file)
+ - NOTE: Please see comments for breakdown of code logic
  - This class creates a bounded buffer and implements pop() and push() functions to properly add or remove items to the buffer. The buffer allows multiple threads to push and pop ledger entries safely.
 - Buffer(int N) is the constructor for the buffer class. It initializes the member variables, allocates memory for the bounded buffer, and initializes the mutex and condition variables.
 - ~Buffer() is the deconstructor for the buffer class. It frees the memory allocated for the bounded buffer and destroys the mutex and condition variables.
