@@ -18,6 +18,7 @@ This function has not been altered from original starter code.
 - "int max_items": total number of items in ledgere (max # of items that can be processed by buffer)
 - All other variables are unaltered or were given in starter code.
 # Updates to bank.cpp/bank.h
+ - NOTE: Please see comments for breakdown of code logic (e.g. where reader/writer locks are and initialized, destroyed, etc., checkbalance() logic)
 - Added checkbalance() function that checks an accounts balance. Returns message in recordSucc in the proper format. Formatted similarly to the other functions in the file.
 - Changed lock to reader/writer lock in bank.h. In bank.cpp The lock in checkbalance() has specifically been changed to a reader lock. While locks in deposit, withdraw, etc. were changed to writer locks since they are altering the amount in the account.
 - Added checkbalance() as a bank operation in the worker function in ledger.cpp (will work depending on the ledger entry mode)
