@@ -38,5 +38,7 @@ https://youtu.be/Ve5Q78FE_y0
 Demo Video: 
 https://youtu.be/1gs_aOgsyfY
 
+Demo video is the ending of the presentation video (split into 2)
+
 Presentation overview slides:
 https://docs.google.com/presentation/d/1LRjkfJbR1oGPv3eWieKRycQEEPDGA6RASEErnu2buso/edit?usp=sharing
