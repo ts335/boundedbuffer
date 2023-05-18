@@ -1,5 +1,6 @@
 # boundedbuffer
 # Updates to Ledger.cpp
+- NOTE: Please see comments in code for more thorough breakdown of function logic
 - void InitBank(int num_workers, char *filename)
 This method initializes both the bank and buffer objects. It loads the ledger from a file, creates reader threads and writer threads, and joins both the reader and writer threads at the end. 
 
