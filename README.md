@@ -20,7 +20,7 @@ This function has not been altered from original starter code.
 # Updates to bank.cpp/bank.h
 - Added checkbalance() function that checks an accounts balance. Returns message in recordSucc in the proper format. Formatted similarly to the other functions in the file.
 - Changed lock to reader/writer lock in bank.h. In bank.cpp The lock in checkbalance() has specifically been changed to a reader lock. While locks in deposit, withdraw, etc. were changed to writer locks since they are altering the amount in the account.
-- Added it as a bank operation in the worker function in ledger.cpp (will work depending on the ledger entry mode)
+- Added checkbalance() as a bank operation in the worker function in ledger.cpp (will work depending on the ledger entry mode)
  # buffer.cpp and buffer.h (new class/header file)
  - This class creates a bounded buffer and implements pop() and push() functions to properly add or remove items to the buffer. The buffer allows multiple threads to push and pop ledger entries safely.
 - Buffer(int N) is the constructor for the buffer class. It initializes the member variables, allocates memory for the bounded buffer, and initializes the mutex and condition variables.
@@ -28,9 +28,12 @@ This function has not been altered from original starter code.
 - struct Ledger pop() is the function that removes ledger objects from the buffer. It works by locking the mutex, makes the threads wait if the buffer is empty, retrieves the last filled slot value, updates the indices and counters, signals the buffer is not full, and then unlocks the mutex.
 - struct Ledger push(struct Ledger value) is the function that adds ledger objects to the buffer. It works by locking the mutex, makes the threads wait if the buffer is full, adds the entry to the first empty slot, updates the indices and counters, signals the buffer is not empty, and unlocks the mutex.
 
-# Videos
+# Videos/Links
 Presentation Video:
 https://youtu.be/Ve5Q78FE_y0
 
 Demo Video: 
 https://youtu.be/1gs_aOgsyfY
+
+Slides link:
+https://docs.google.com/presentation/d/1LRjkfJbR1oGPv3eWieKRycQEEPDGA6RASEErnu2buso/edit?usp=sharing
