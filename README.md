@@ -16,6 +16,7 @@ This function has not been altered from original starter code.
 - "pthread_mutex_t counterlock" & "int counter": The counter variable and counterlock mutex are used to ensure thread safety when updating the counter variable by the worker threads. This keeps track of the items the worker threads have processed.
 - "Buffer *buffer": Addeed pointer to buffer object
 - "int max_items": total number of items in ledgere (max # of items that can be processed by buffer)
+- All other variables are unaltered or were given in starter code.
 # Updates to bank.cpp/bank.h
 - Added checkbalance() function that checks an accounts balance. Returns message in recordSucc in the proper format. Formatted similarly to the other functions in the file.
 - Changed lock to reader/writer lock in bank.h. In bank.cpp The lock in checkbalance() has specifically been changed to a reader lock. While locks in deposit, withdraw, etc. were changed to writer locks since they are altering the amount in the account.
