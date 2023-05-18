@@ -211,10 +211,10 @@ int Bank::checkbalance(int workerID, int ledgerID, int accountID) { //added
   if (accountID >= num || accountID < 0 ) {
     return -1;
   }
-  pthread_rwlock_rdlock(&accounts[accountID].lock); //pthread_rwlock_wrlock for writing
-  int balance = accounts[accountID].balance; //Q: is this the only place i use a read lock?
+  pthread_rwlock_rdlock(&accounts[accountID].lock); 
+  int balance = accounts[accountID].balance; 
   sprintf(message, "Worker %d completed ledger %d: balance check of account %d. Account balance is %d", workerID, ledgerID, accountID, balance); 
   recordSucc(message);
   pthread_rwlock_unlock(&accounts[accountID].lock);
-  return 0; //Q: should i return balance? No other function is returning anything but "0"
+  return 0; 
 }

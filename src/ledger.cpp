@@ -25,13 +25,12 @@ int max_items = 0;
 void InitBank(int num_workers, char *filename) {
 	//TODO: initialize the bank object with 10 accounts
 	bank = new Bank(10);
-	buffer = new Buffer(50);
+	buffer = new Buffer(25);
 
 	bank->print_account();
 	//TODO: call load_ledger() to parse the file given by filename
 	load_ledger(filename);
 	max_items = ledger.size();
-	cout << "SIZE" << max_items << endl;
 	int worker_ids[num_workers];
 	int reader_ids[num_workers];
 
@@ -90,47 +89,29 @@ void load_ledger(char *filename){
 
 void* reader(void *readerID) {
 	int id = (*(int*)readerID);
-	cout << "Getting reader id: " << id << endl;
 	pthread_mutex_lock(&ledger_lock);
-
 	while (!ledger.empty()) {
-		cout << "Beginning of reader loop - Reader id: " <<  id << endl;
 		struct Ledger item = ledger.front();
 		ledger.pop_front();
 		pthread_mutex_unlock(&ledger_lock); 
-		cout << "Item was added" << " Reader id: " <<  id << endl;
 		buffer->push(item);
-		cout << "Item was pushed to buffer - id: " << id << endl;
-		cout << "Reader ID BEFORE counter: " << id << endl;
-		cout << "Reader ID AFTER counter: " << id << endl;
 
 		pthread_mutex_lock(&ledger_lock); 
 	}
-	cout << "BEFORE unlock - reader id: " << id << endl;
 	pthread_mutex_unlock(&ledger_lock); 
-	cout << "AFTER unlock - reader id:" << id << endl;
 	return NULL;
 }
 
 void* worker(void *workerID){
 	int id = (*(int*)workerID); //casting to int and dereferencing 
-	//pthread_mutex_lock(&ledger_lock);
-	cout << "Getting worker id: " << id << endl;
 	while (true) {
 		if (counter >= max_items) {
-			cout << "Counter should break here. " << counter << id << endl;
-            return NULL;
+            break;
 		}
-		cout << "Beginning of worker loop - worker id: " << id << endl;
-		//getting first item off of the list
-		
 		struct Ledger item = buffer->pop(); //struct Ledger item = ledger.front();
-		cout << "BEFORE counter: " << counter << endl;
 		pthread_mutex_lock(&counterlock);
-		cout << "DURING counter: " << counter << endl;
         counter++;
         pthread_mutex_unlock(&counterlock);
-		cout << "Got item off of buffer - worker id: " << id << endl;
 		if (item.ledgerID == -1)
             break;
 		//pthread_mutex_unlock(&ledger_lock); 
@@ -143,11 +124,7 @@ void* worker(void *workerID){
 		} else if (item.mode == 3) {
             bank->checkbalance(id, item.ledgerID, item.from); //added
         }
-		//pthread_mutex_lock(&ledger_lock);
-		
-       cout << "AFTER counter: " << counter << endl;
+	
 	}
-	//pthread_mutex_unlock(&ledger_lock); 
-	cout << "Counter should break here out in here. " << counter << endl;
 	return NULL;
 }
