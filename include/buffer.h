@@ -18,21 +18,21 @@ using namespace std;
 
 class Buffer {
   private:
-    int size;
+    int size; //size of buffer
     int current; //number of elements in buffer
-    int first_empty_slot;
-    int last_filled_slot;
+    int first_empty_slot; //index of first available empty slot
+    int last_filled_slot; //index of last filled slot
     struct Ledger *boundedbuffer;
-    pthread_mutex_t lock;
-    pthread_cond_t notFull;
-    pthread_cond_t notEmpty;
+    pthread_mutex_t lock; //declaring lock
+    pthread_cond_t notFull; //conditional for when buffer is not full
+    pthread_cond_t notEmpty; //conditional for when buffer is not empty
     
   public:
     Buffer(int N);
     ~Buffer(); // destructor
     
-    struct Ledger pop();
-    struct Ledger push(struct Ledger value);
+    struct Ledger pop(); //removes item from buffer
+    struct Ledger push(struct Ledger value); //adds item to buffer
 };
 
 #endif
