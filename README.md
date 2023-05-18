@@ -32,13 +32,11 @@ This function has not been altered from original starter code.
 - struct Ledger push(struct Ledger value) is the function that adds ledger objects to the buffer. It works by locking the mutex, makes the threads wait if the buffer is full, adds the entry to the first empty slot, updates the indices and counters, signals the buffer is not empty, and unlocks the mutex.
 
 # Videos/Links
-Presentation Video:
-https://youtu.be/Ve5Q78FE_y0
+Presentation video w/demo:
+This video only gives a brief overview of the slides and code but the comments
+in the code explain the logic and functionality in the functions. 
 
-Demo Video: 
-https://youtu.be/1gs_aOgsyfY
+https://watch.screencastify.com/v/FLw1isJz9Z1SKuGSQSqr
 
-Demo video is the ending of the presentation video (split into 2)
-
-Presentation overview slides:
+Presentation slides:
 https://docs.google.com/presentation/d/1LRjkfJbR1oGPv3eWieKRycQEEPDGA6RASEErnu2buso/edit?usp=sharing
