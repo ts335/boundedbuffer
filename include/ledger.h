@@ -25,6 +25,6 @@ extern list<struct Ledger> ledger;
 void InitBank(int num_workers, char *filename);
 void load_ledger(char *filename);
 void *worker(void *unused);
-void *reader(void *unused);
+void *reader(void *unused); //added func declaration for new reader function
 
 #endif

@@ -3,13 +3,13 @@
 using namespace std;
 
 pthread_mutex_t ledger_lock = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t counterlock = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t counterlock = PTHREAD_MUTEX_INITIALIZER; //lock for counter
 
 list<struct Ledger> ledger;
 Bank *bank;
-Buffer *buffer;
-int counter = 0;
-int max_items = 0;
+Buffer *buffer; //buffer pointer 
+int counter = 0; //initializing
+int max_items = 0; //initializing
 // 
 /**
  * @brief creates a new bank object and sets up workers
@@ -23,26 +23,22 @@ int max_items = 0;
  * @param filename 
  */
 void InitBank(int num_workers, char *filename) {
-	//TODO: initialize the bank object with 10 accounts
 	bank = new Bank(10);
-	buffer = new Buffer(8);
+	buffer = new Buffer(8); //creating buffer object w/size
 
 	bank->print_account();
-	//TODO: call load_ledger() to parse the file given by filename
 	load_ledger(filename);
 	max_items = ledger.size();
 	int worker_ids[num_workers];
 	int reader_ids[num_workers];
-
-	
-	//have worker threads and loader threads - same data type but will have diff numbers
+	//creating reader threads 
 	pthread_t reader_threads[num_workers];
 	for (int i = 0; i < num_workers; i++) {
 		reader_ids[i] = i;
 		//cout << "Creating reader thread: " << i << endl;
 		pthread_create(&reader_threads[i], NULL, reader, &(reader_ids[i]));
 	}
-
+	//creating worker threads
 	pthread_t worker_threads[num_workers];
 	for (int i = 0; i < num_workers; i++) {
 		worker_ids[i] = i;
@@ -50,10 +46,10 @@ void InitBank(int num_workers, char *filename) {
 		pthread_create(&worker_threads[i], NULL, worker, &(worker_ids[i]));
 	}
 	for (int i = 0; i < num_workers; i++) {
-		pthread_join(reader_threads[i], NULL);
+		pthread_join(reader_threads[i], NULL); //joining reader threads
 	}
 	for (int i = 0; i < num_workers; i++) {
-		pthread_join(worker_threads[i], NULL);
+		pthread_join(worker_threads[i], NULL); //joining worker threads
 	}
 	bank->print_account();
 }
@@ -64,9 +60,7 @@ void InitBank(int num_workers, char *filename) {
  * @param filename 
  */
 void load_ledger(char *filename){
-	//here add multiple threads 
-	//open up file outside of this function
-	//and have threads go in to grab something from file they append to the list
+	//unchanged
 	ifstream infile(filename);
 	int f, t, a, m, ledgerID=0;
 	while (infile >> f >> t >> a >> m) {
@@ -89,16 +83,16 @@ void load_ledger(char *filename){
 
 void* reader(void *readerID) {
 	int id = (*(int*)readerID);
-	pthread_mutex_lock(&ledger_lock);
-	while (!ledger.empty()) {
-		struct Ledger item = ledger.front();
-		ledger.pop_front();
-		pthread_mutex_unlock(&ledger_lock); 
-		buffer->push(item);
+	pthread_mutex_lock(&ledger_lock); //locking to prevent multiple threads from accessing at once
+	while (!ledger.empty()) { //while the ledger list is not empty
+		struct Ledger item = ledger.front(); //set this to item from ledger list
+		ledger.pop_front(); //remove that item from ledger list
+		pthread_mutex_unlock(&ledger_lock); //unlock
+		buffer->push(item); //adding item to bugger
 
-		pthread_mutex_lock(&ledger_lock); 
+		pthread_mutex_lock(&ledger_lock); //locking again 
 	}
-	pthread_mutex_unlock(&ledger_lock); 
+	pthread_mutex_unlock(&ledger_lock); //unlock 
 	return NULL;
 }
 
@@ -106,15 +100,15 @@ void* worker(void *workerID){
 	int id = (*(int*)workerID); //casting to int and dereferencing 
 	while (true) {
 		if (counter >= max_items) {
-            break;
+            break; //all ledger items have been processed so we break
 		}
-		struct Ledger item = buffer->pop(); //struct Ledger item = ledger.front();
+		struct Ledger item = buffer->pop(); //removing item from buffer 
 		pthread_mutex_lock(&counterlock);
-        counter++;
+        counter++; //incrementing counter as we process ledger objects
         pthread_mutex_unlock(&counterlock);
 		if (item.ledgerID == -1)
-            break;
-		//pthread_mutex_unlock(&ledger_lock); 
+            break; 
+		//bank options below 
 		if (item.mode == 0) {
 			bank->deposit(id, item.ledgerID, item.from, item.amount);
 		} else if (item.mode == 1) {
